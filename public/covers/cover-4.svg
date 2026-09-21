@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="600" viewBox="0 0 420 600">
+<rect width="420" height="600" fill="#F4EEE4"/>
+<rect x="32" y="34" width="5" height="42" fill="#D71920"/>
+<text x="53" y="60" fill="#0A4B8E" font-size="21" font-family="Georgia, serif" font-weight="700">Revista Científica de</text>
+<text x="53" y="98" fill="#0A4B8E" font-size="44" font-family="Georgia, serif" font-weight="700">Psicologia</text>
+<text x="53" y="120" fill="#0A4B8E" font-size="12" font-family="Arial, sans-serif" letter-spacing="3">UNIEURO</text>
+<path d="M70 323c46-115 101-183 165-203 23-7 51-6 83 5-20 29-31 61-32 96-2 39 8 77 30 114-90 23-172 19-246-12z" fill="#A93F35"/><path d="M141 132c44 17 82 46 114 88" fill="none" stroke="#18354F" stroke-width="28" opacity=".9"/><circle cx="245" cy="213" r="84" fill="#18354F" opacity=".58"/>
+<line x1="52" y1="404" x2="94" y2="404" stroke="#D71920" stroke-width="4"/>
+<foreignObject x="52" y="425" width="320" height="120"><div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Georgia,serif;font-size:26px;line-height:1.03;color:#17324f;font-weight:700">Diversidade e Inclusão</div></foreignObject>
+<foreignObject x="52" y="525" width="305" height="55"><div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Arial,sans-serif;font-size:13px;line-height:1.35;color:#3f5368">Perspectivas para uma sociedade plural</div></foreignObject>
+</svg>

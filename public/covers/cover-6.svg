@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="600" viewBox="0 0 420 600">
+<rect width="420" height="600" fill="#F3F0E8"/>
+<rect x="32" y="34" width="5" height="42" fill="#D71920"/>
+<text x="53" y="60" fill="#0A4B8E" font-size="21" font-family="Georgia, serif" font-weight="700">Revista Científica de</text>
+<text x="53" y="98" fill="#0A4B8E" font-size="44" font-family="Georgia, serif" font-weight="700">Psicologia</text>
+<text x="53" y="120" fill="#0A4B8E" font-size="12" font-family="Arial, sans-serif" letter-spacing="3">UNIEURO</text>
+<circle cx="197" cy="211" r="110" fill="#536A59"/><path d="M197 101c-43 18-73 62-73 113 0 71 53 129 118 129 4 0 8 0 12-1-23-17-38-45-38-77 0-37 20-69 49-84-10-41-34-70-68-80z" fill="#B8C6B2"/><path d="M166 168c23 7 41 24 51 47M154 198c29 3 52 17 68 41M153 229c27-1 50 7 69 24" fill="none" stroke="#F3F0E8" stroke-width="5" opacity=".8"/>
+<line x1="52" y1="404" x2="94" y2="404" stroke="#D71920" stroke-width="4"/>
+<foreignObject x="52" y="425" width="320" height="120"><div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Georgia,serif;font-size:26px;line-height:1.03;color:#17324f;font-weight:700">Neuropsicologia</div></foreignObject>
+<foreignObject x="52" y="525" width="305" height="55"><div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Arial,sans-serif;font-size:13px;line-height:1.35;color:#3f5368">Ciência e prática</div></foreignObject>
+</svg>
