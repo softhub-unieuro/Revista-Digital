@@ -1,0 +1,17 @@
+{
+  "S01": {
+    "number": 1,
+    "title": "Sprint 1 - Backend e administração funcional",
+    "url": "https://github.com/Dj157/revista-psicologia-unieuro/milestone/1"
+  },
+  "S02": {
+    "number": 2,
+    "title": "Sprint 2 - PDF, leitor e fidelidade visual",
+    "url": "https://github.com/Dj157/revista-psicologia-unieuro/milestone/2"
+  },
+  "S03": {
+    "number": 3,
+    "title": "Sprint 3 - Homologação e entrega",
+    "url": "https://github.com/Dj157/revista-psicologia-unieuro/milestone/3"
+  }
+}

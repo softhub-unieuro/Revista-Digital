@@ -1,0 +1,25 @@
+[project]
+name = "revista-backend"
+version = "0.1.0"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+  "Django>=5.2.19,<5.3", "djangorestframework>=3.16,<4",
+  "drf-spectacular>=0.28,<1", "django-environ>=0.12,<1",
+  "psycopg[binary]>=3.2,<4", "celery[redis]>=5.6,<6",
+  "gunicorn>=23,<24", "pypdf>=6.1,<7", "pypdfium2>=4.30,<6", "Pillow>=11,<13",
+]
+[dependency-groups]
+dev = ["pytest>=8,<10", "pytest-django>=4.9,<5", "ruff>=0.12,<1", "reportlab>=4.4,<5"]
+[tool.uv]
+package = false
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings.testing"
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-ra"
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501"]

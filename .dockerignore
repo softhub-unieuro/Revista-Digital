@@ -1,0 +1,16 @@
+.git
+.env
+.env.*
+**/node_modules
+**/dist
+**/.venv
+**/__pycache__
+**/.pytest_cache
+**/.ruff_cache
+frontend/public/pdfjs
+storage
+backups
+deploy/certs
+
+entregas
+frontend/qa-responsive.html

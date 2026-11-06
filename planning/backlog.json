@@ -1,0 +1,787 @@
+[
+  {
+    "id": "BASE-01",
+    "phase": "F00",
+    "title": "Preservar o frontend e publicar o planejamento",
+    "area": "planejamento",
+    "dependencies": [],
+    "objective": "Criar uma base independente e rastreável do projeto de revistas.",
+    "acceptance": [
+      "Copiar os 16 arquivos rastreados do frontend sem alterar seus conteúdos e registrar SHA-256.",
+      "Publicar escopo, fases, arquitetura, contratos, testes e checklist de entrega.",
+      "Criar tarefas com dependências e critérios de aceite; validar o build da cópia."
+    ],
+    "priority": "P0",
+    "status": "concluida",
+    "issue_number": 1,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/1",
+    "sprint": "S01"
+  },
+  {
+    "id": "FUND-01",
+    "phase": "F01",
+    "title": "Organizar ferramentas, versões e ambiente local",
+    "area": "infra",
+    "dependencies": [
+      "BASE-01"
+    ],
+    "objective": "Padronizar o monorepo para execução consistente.",
+    "acceptance": [
+      "Fixar versões compatíveis e lockfiles; separar desenvolvimento e produção.",
+      "Documentar comandos reais e exemplos de ambiente sem segredos.",
+      "Executar frontend, API, banco e worker a partir de um checkout limpo.",
+      "Corrigir os dois achados high do npm audit na base (vite e source-map-js), atualizar o lockfile e repetir build/audit sem regressão."
+    ],
+    "priority": "P0",
+    "status": "concluida",
+    "issue_number": 2,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/2",
+    "sprint": "S01"
+  },
+  {
+    "id": "FUND-02",
+    "phase": "F01",
+    "title": "Criar Django, PostgreSQL e migrações iniciais",
+    "area": "backend",
+    "dependencies": [
+      "FUND-01"
+    ],
+    "objective": "Construir o backend específico de revistas.",
+    "acceptance": [
+      "Criar projeto Django/DRF com configurações por ambiente e usuário próprio desde a primeira migração.",
+      "Criar migrações versionadas e validar criação do banco do zero e atualização.",
+      "Expor liveness/readiness; não importar entidades do sistema de educação física."
+    ],
+    "priority": "P0",
+    "status": "concluida",
+    "issue_number": 3,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/3",
+    "sprint": "S01"
+  },
+  {
+    "id": "FUND-03",
+    "phase": "F01",
+    "title": "Ampliar CI e manter contrato OpenAPI verificável",
+    "area": "infra",
+    "dependencies": [
+      "FUND-02"
+    ],
+    "objective": "Detectar regressões em cada mudança.",
+    "acceptance": [
+      "Executar lint, build frontend, testes backend com PostgreSQL e verificação de migrações no CI.",
+      "Gerar e validar o schema OpenAPI; sincronizar contratos e documentação.",
+      "Aplicar verificações a pull requests sem exigir segredos de produção."
+    ],
+    "priority": "P0",
+    "status": "concluida",
+    "issue_number": 4,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/4",
+    "sprint": "S01"
+  },
+  {
+    "id": "FUND-04",
+    "phase": "F01",
+    "title": "Provar PDF.js, animação e limites com 300 páginas",
+    "area": "leitor",
+    "dependencies": [
+      "FUND-01"
+    ],
+    "objective": "Resolver cedo o risco de desempenho e compatibilidade do leitor.",
+    "acceptance": [
+      "Usar PDFs reais de texto e escaneados com 300 páginas; medir tempo, canvases e memória.",
+      "Comparar StPageFlip isolado por adaptador com animação CSS de reserva, sem montar 300 canvases.",
+      "Registrar decisão, versões, orçamento de recursos e arquivos de teste reproduzíveis."
+    ],
+    "priority": "P0",
+    "status": "em_andamento",
+    "issue_number": 5,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/5",
+    "sprint": "S02",
+    "evidence": "docs/14-sprint2-pdf-real.md"
+  },
+  {
+    "id": "AUTH-01",
+    "phase": "F02",
+    "title": "Implementar login, logout, sessão e CSRF",
+    "area": "backend",
+    "dependencies": [
+      "FUND-02"
+    ],
+    "objective": "Substituir o login demonstrativo por autenticação real.",
+    "acceptance": [
+      "Validar credenciais no servidor, rotacionar sessão no login e invalidá-la no logout.",
+      "Proteger login e operações de escrita com CSRF; cookies apropriados para HTTPS.",
+      "Limitar tentativas e apresentar erro genérico; remover credenciais preenchidas na interface."
+    ],
+    "priority": "P0",
+    "status": "concluida",
+    "issue_number": 6,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/6",
+    "sprint": "S01"
+  },
+  {
+    "id": "AUTH-02",
+    "phase": "F02",
+    "title": "Aplicar permissões dos três perfis em API e frontend",
+    "area": "backend",
+    "dependencies": [
+      "AUTH-01"
+    ],
+    "objective": "Aplicar a matriz de acesso sem depender da visibilidade de botões.",
+    "acceptance": [
+      "Administrador gerencia tudo; editor publica; colaborador altera apenas seus rascunhos.",
+      "Testar acessos diretos, IDs de outros usuários e arquivos de rascunhos.",
+      "Restaurar sessão ao recarregar e tratar expiração com retorno à tela adequada."
+    ],
+    "priority": "P0",
+    "status": "concluida",
+    "issue_number": 7,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/7",
+    "sprint": "S01",
+    "evidence": "docs/15-sprint3-entrega.md",
+    "latest_evidence": "docs/18-homologacao-leitor.md"
+  },
+  {
+    "id": "AUTH-03",
+    "phase": "F02",
+    "title": "Gerenciar usuários e registrar ações administrativas",
+    "area": "backend",
+    "dependencies": [
+      "AUTH-02"
+    ],
+    "objective": "Fazer funcionar a área de usuários já existente.",
+    "acceptance": [
+      "Criar, editar e desativar usuários; controlar papéis somente pelo administrador.",
+      "Impedir remoção/desativação do último administrador e escalada de privilégios.",
+      "Auditar mudanças relevantes e documentar criação/recuperação do acesso inicial sem senha no repositório."
+    ],
+    "priority": "P1",
+    "status": "concluida",
+    "issue_number": 8,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/8",
+    "sprint": "S01",
+    "evidence": "docs/15-sprint3-entrega.md"
+  },
+  {
+    "id": "DOM-01",
+    "phase": "F03",
+    "title": "Modelar publicações, categorias e estados editoriais",
+    "area": "backend",
+    "dependencies": [
+      "AUTH-02"
+    ],
+    "objective": "Persistir o catálogo e o fluxo editorial.",
+    "acceptance": [
+      "Implementar modelos, constraints, relacionamentos, slugs únicos e categorias ordenadas.",
+      "Separar estado editorial de processamento do arquivo; só publicar arquivo pronto.",
+      "Arquivar/restaurar sem perder histórico e preservar a versão publicada durante substituição do PDF.",
+      "Representar autores e pareceristas como dados editoriais, separados das contas de acesso, sem inventar fluxo complexo de revisão."
+    ],
+    "priority": "P1",
+    "status": "concluida",
+    "issue_number": 9,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/9",
+    "sprint": "S01",
+    "evidence": "docs/15-sprint3-entrega.md",
+    "latest_evidence": "docs/18-homologacao-leitor.md"
+  },
+  {
+    "id": "DOM-02",
+    "phase": "F03",
+    "title": "Implementar catálogo, busca, temas, acervo e destaque",
+    "area": "backend",
+    "dependencies": [
+      "DOM-01"
+    ],
+    "objective": "Atender às páginas públicas com dados reais.",
+    "acceptance": [
+      "Listar somente publicadas, com paginação, busca sem diferença de acentos e filtros combináveis.",
+      "Retornar anos, contagens por categoria e destaque calculados a partir do banco.",
+      "Retornar 404 para slug inexistente; Todos reúne o acervo inteiro e anos vazios têm estado explícito."
+    ],
+    "priority": "P1",
+    "status": "concluida",
+    "issue_number": 10,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/10",
+    "sprint": "S01",
+    "evidence": "docs/15-sprint3-entrega.md"
+  },
+  {
+    "id": "DOM-03",
+    "phase": "F03",
+    "title": "Implementar configurações, indicadores e avaliações",
+    "area": "backend",
+    "dependencies": [
+      "DOM-01"
+    ],
+    "objective": "Substituir indicadores e configurações fixos.",
+    "acceptance": [
+      "Persistir dados institucionais e opções de avaliações, download e ISSN.",
+      "Gerar indicadores e médias agregadas reais com consultas controladas.",
+      "Registrar nota de 1 a 5 por identificador anônimo emitido pelo servidor e edição, com atualização sem duplicar contagem."
+    ],
+    "priority": "P1",
+    "status": "concluida",
+    "issue_number": 11,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/11",
+    "sprint": "S01",
+    "evidence": "docs/15-sprint3-entrega.md"
+  },
+  {
+    "id": "PDF-01",
+    "phase": "F04",
+    "title": "Receber e validar arquivos PDF de até 300 páginas",
+    "area": "backend",
+    "dependencies": [
+      "DOM-01"
+    ],
+    "objective": "Aceitar arquivos reais sem confiar apenas na extensão ou no frontend.",
+    "acceptance": [
+      "Receber em streaming para arquivo temporário; limite inicial configurável de 200 MiB.",
+      "Validar assinatura, parse, integridade e quantidade de páginas: 1 e 300 aceitos, 301 rejeitado.",
+      "Rejeitar arquivos inválidos, protegidos por senha e acima do limite; limpar temporários e retornar erro útil."
+    ],
+    "priority": "P0",
+    "status": "concluida",
+    "issue_number": 12,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/12",
+    "sprint": "S01",
+    "evidence": "docs/14-sprint2-pdf-real.md"
+  },
+  {
+    "id": "PDF-02",
+    "phase": "F04",
+    "title": "Processar PDFs em worker com estado e repetição segura",
+    "area": "backend",
+    "dependencies": [
+      "PDF-01"
+    ],
+    "objective": "Tirar processamento pesado do ciclo HTTP.",
+    "acceptance": [
+      "Registrar job durável e estados queued, processing, ready e failed.",
+      "Gerar metadados/capa com limites de tempo e recursos, erro rastreável e retomada após reinício.",
+      "Aplicar idempotência, versionamento e repetição sem duplicar publicação nem substituir arquivo vigente por falha."
+    ],
+    "priority": "P0",
+    "status": "concluida",
+    "issue_number": 13,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/13",
+    "sprint": "S01",
+    "evidence": "docs/14-sprint2-pdf-real.md"
+  },
+  {
+    "id": "PDF-03",
+    "phase": "F04",
+    "title": "Gerenciar capas e armazenamento persistente",
+    "area": "backend",
+    "dependencies": [
+      "PDF-02"
+    ],
+    "objective": "Manter arquivos e capas disponíveis entre implantações.",
+    "acceptance": [
+      "Usar diretório privado em volume persistente e identificadores gerados pelo servidor.",
+      "Gerar capa da primeira página ou aceitar imagem validada, corrigindo orientação e dimensões.",
+      "Remover órfãos com política de retenção e registrar arquivos/derivados em backup."
+    ],
+    "priority": "P0",
+    "status": "concluida",
+    "issue_number": 14,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/14",
+    "sprint": "S01",
+    "evidence": "docs/15-sprint3-entrega.md"
+  },
+  {
+    "id": "PDF-04",
+    "phase": "F04",
+    "title": "Servir leitura e download com HTTP Range",
+    "area": "infra",
+    "dependencies": [
+      "PDF-03",
+      "AUTH-02"
+    ],
+    "objective": "Entregar arquivos extensos sem carregá-los na memória da API.",
+    "acceptance": [
+      "Autorizar cada acesso antes de delegar ao Nginx em localização interna.",
+      "Testar 200, HEAD, Range 206, Content-Range, 416 e nomes de download.",
+      "Bloquear arquivos de rascunhos/arquivados ao público, inclusive por URL conhecida; aplicar opção de download sem prometer DRM."
+    ],
+    "priority": "P0",
+    "status": "concluida",
+    "issue_number": 15,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/15",
+    "sprint": "S01",
+    "evidence": "docs/15-sprint3-entrega.md"
+  },
+  {
+    "id": "INT-01",
+    "phase": "F05",
+    "title": "Conectar páginas públicas e corrigir a busca",
+    "area": "frontend",
+    "dependencies": [
+      "DOM-02",
+      "DOM-03",
+      "PDF-04"
+    ],
+    "objective": "Trocar arrays demonstrativos por respostas da API.",
+    "acceptance": [
+      "Criar cliente de API, estados de carregamento, vazio, erro e cancelamento.",
+      "Ligar home, catálogo, detalhe, temas, acervo e busca; sincronizar URL e campo em buscas consecutivas.",
+      "Corrigir Todos, slugs inválidos e contagens; não importar mocks em caminhos de produção."
+    ],
+    "priority": "P1",
+    "status": "concluida",
+    "issue_number": 16,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/16",
+    "sprint": "S01",
+    "evidence": "docs/14-sprint2-pdf-real.md"
+  },
+  {
+    "id": "INT-02",
+    "phase": "F05",
+    "title": "Conectar upload, publicação e edição administrativa",
+    "area": "frontend",
+    "dependencies": [
+      "PDF-04",
+      "AUTH-02"
+    ],
+    "objective": "Concluir o fluxo administrativo principal.",
+    "acceptance": [
+      "Bloquear avanço sem arquivo/informações válidas; mostrar progresso e estado do processamento.",
+      "Ligar capa, rascunho, publicar, salvar, arquivar e restaurar com confirmação de resultado.",
+      "Tratar timeout, reenvio, erro do servidor e troca de PDF sem duplicações."
+    ],
+    "priority": "P1",
+    "status": "em_andamento",
+    "issue_number": 17,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/17",
+    "sprint": "S01",
+    "evidence": "docs/14-sprint2-pdf-real.md",
+    "latest_evidence": "docs/18-homologacao-leitor.md"
+  },
+  {
+    "id": "INT-03",
+    "phase": "F05",
+    "title": "Conectar usuários, categorias, configurações e indicadores",
+    "area": "frontend",
+    "dependencies": [
+      "AUTH-03",
+      "DOM-03"
+    ],
+    "objective": "Fazer funcionar as demais telas do admin.",
+    "acceptance": [
+      "Implementar ações reais de criar/editar e persistir opções com feedback de erro/sucesso.",
+      "Aplicar filtro de status e busca combinados, paginação e números reais.",
+      "Exibir menus e ações por perfil sem substituir a verificação no servidor.",
+      "Conectar Autores e Pareceristas do frontend final com cadastros reais, vínculos e contagens; preservar suas rotas."
+    ],
+    "priority": "P1",
+    "status": "concluida",
+    "issue_number": 18,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/18",
+    "sprint": "S01",
+    "evidence": "docs/15-sprint3-entrega.md"
+  },
+  {
+    "id": "INT-04",
+    "phase": "F05",
+    "title": "Persistir avaliações e controlar disponibilidade",
+    "area": "frontend",
+    "dependencies": [
+      "DOM-03",
+      "INT-01"
+    ],
+    "objective": "Manter nota e média consistentes após recarregar.",
+    "acceptance": [
+      "Enviar nota real, recuperar a nota do navegador e atualizar média/contagem após sucesso.",
+      "Tratar opção de avaliações desativadas, repetição, indisponibilidade e limitação de requisições.",
+      "Testar alteração da nota sem nova contagem e leitura pública sem login."
+    ],
+    "priority": "P1",
+    "status": "concluida",
+    "issue_number": 19,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/19",
+    "sprint": "S01",
+    "evidence": "docs/15-sprint3-entrega.md"
+  },
+  {
+    "id": "READ-01",
+    "phase": "F06",
+    "title": "Renderizar PDF real com PDF.js e cache limitado",
+    "area": "leitor",
+    "dependencies": [
+      "FUND-04",
+      "PDF-04"
+    ],
+    "objective": "Substituir ReaderPage fictício pelo conteúdo original.",
+    "acceptance": [
+      "Carregar PDF.js e worker compatíveis apenas ao abrir o leitor.",
+      "Renderizar texto/links e páginas visíveis, cancelar renderizações antigas e liberar canvases.",
+      "Manter número real de páginas e cache limitado; testar abertura, erro de rede e PDF problemático."
+    ],
+    "priority": "P0",
+    "status": "em_andamento",
+    "issue_number": 20,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/20",
+    "sprint": "S02",
+    "evidence": "docs/14-sprint2-pdf-real.md",
+    "latest_evidence": "docs/18-homologacao-leitor.md"
+  },
+  {
+    "id": "READ-02",
+    "phase": "F06",
+    "title": "Corrigir paginação responsiva e navegação por toque",
+    "area": "leitor",
+    "dependencies": [
+      "READ-01"
+    ],
+    "objective": "Permitir ler todas as páginas em qualquer dispositivo.",
+    "acceptance": [
+      "No celular avançar uma página; no desktop usar capa isolada e páginas duplas com limites corretos.",
+      "Implementar clique, teclado e deslize, respeitando interação com zoom e seleção de texto.",
+      "Testar 1, 2, 299 e 300 páginas e redimensionamento sem perder a página selecionada."
+    ],
+    "priority": "P0",
+    "status": "em_andamento",
+    "issue_number": 21,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/21",
+    "sprint": "S02",
+    "evidence": "docs/14-sprint2-pdf-real.md",
+    "latest_evidence": "docs/18-homologacao-leitor.md"
+  },
+  {
+    "id": "READ-03",
+    "phase": "F06",
+    "title": "Implementar animação de virar páginas",
+    "area": "leitor",
+    "dependencies": [
+      "READ-02",
+      "FUND-04"
+    ],
+    "objective": "Entregar o efeito solicitado mantendo a leitura utilizável.",
+    "acceptance": [
+      "Integrar a solução aprovada no spike por um adaptador isolado do renderizador.",
+      "Manter índice consistente durante gestos rápidos, mudança de tamanho e troca de documento.",
+      "Respeitar prefers-reduced-motion e modo sem animação; não renderizar todo o livro para animar."
+    ],
+    "priority": "P0",
+    "status": "em_andamento",
+    "issue_number": 22,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/22",
+    "sprint": "S02",
+    "evidence": "docs/14-sprint2-pdf-real.md"
+  },
+  {
+    "id": "READ-04",
+    "phase": "F06",
+    "title": "Concluir zoom, controles e acessibilidade do leitor",
+    "area": "leitor",
+    "dependencies": [
+      "READ-02"
+    ],
+    "objective": "Tornar a leitura de revistas extensas prática e legível.",
+    "acceptance": [
+      "Implementar zoom/ajuste, indicador e salto para página com nomes acessíveis e limites validados.",
+      "Evitar cortes, saltos de layout e conflitos entre pan, swipe e virar página.",
+      "Garantir foco visível, teclado, mensagens de erro e alternativa de leitura sem animação.",
+      "Preservar miniaturas e tela cheia do frontend final; virtualizar miniaturas para 300 páginas."
+    ],
+    "priority": "P1",
+    "status": "em_andamento",
+    "issue_number": 23,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/23",
+    "sprint": "S02",
+    "evidence": "docs/14-sprint2-pdf-real.md",
+    "latest_evidence": "docs/18-homologacao-leitor.md"
+  },
+  {
+    "id": "VIS-01",
+    "phase": "F07",
+    "title": "Consolidar referência, logo, capas e tokens visuais",
+    "area": "design",
+    "dependencies": [
+      "BASE-01"
+    ],
+    "objective": "Transformar a imagem e o contexto do chat em critérios verificáveis.",
+    "acceptance": [
+      "Preservar logo oficial e capas já recebidos no pacote final e registrar sua origem.",
+      "Preservar os acentos dourados do pacote final fornecido pelo responsável.",
+      "Definir fontes, pesos, cores, espaçamentos e tamanhos de referência com aprovação visual objetiva."
+    ],
+    "priority": "P1",
+    "status": "em_andamento",
+    "issue_number": 24,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/24",
+    "sprint": "S02",
+    "evidence": "docs/14-sprint2-pdf-real.md"
+  },
+  {
+    "id": "VIS-02",
+    "phase": "F07",
+    "title": "Ajustar páginas públicas à imagem de referência",
+    "area": "frontend",
+    "dependencies": [
+      "VIS-01",
+      "INT-01"
+    ],
+    "objective": "Reproduzir a composição institucional solicitada.",
+    "acceptance": [
+      "Ajustar header, busca, destaque, capas, recentes, temas, acervo e rodapé.",
+      "Substituir símbolos tipográficos por ícones consistentes e ativar os links institucionais.",
+      "Comparar capturas em desktop e celular; corrigir overflow de 452 px em viewport de 390 px."
+    ],
+    "priority": "P1",
+    "status": "em_andamento",
+    "issue_number": 25,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/25",
+    "sprint": "S02",
+    "evidence": "docs/14-sprint2-pdf-real.md"
+  },
+  {
+    "id": "VIS-03",
+    "phase": "F07",
+    "title": "Padronizar admin e responsividade",
+    "area": "frontend",
+    "dependencies": [
+      "VIS-01",
+      "INT-02",
+      "INT-03"
+    ],
+    "objective": "Manter a mesma identidade no fluxo de gestão.",
+    "acceptance": [
+      "Padronizar navegação, tabelas, campos, botões, estados e mensagens.",
+      "Tornar formulários e tabelas utilizáveis em 390, 768, 1024 e 1440 px.",
+      "Entregar evidências de comparação e acesso por teclado sem bloquear ações na tela pequena."
+    ],
+    "priority": "P1",
+    "status": "em_andamento",
+    "issue_number": 26,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/26",
+    "sprint": "S02",
+    "evidence": "docs/14-sprint2-pdf-real.md"
+  },
+  {
+    "id": "QA-01",
+    "phase": "F08",
+    "title": "Consolidar testes de API, permissões e persistência",
+    "area": "qualidade",
+    "dependencies": [
+      "INT-02",
+      "INT-03",
+      "INT-04"
+    ],
+    "objective": "Comprovar os contratos e as regras reais do sistema.",
+    "acceptance": [
+      "Cobrir ciclo editorial, proprietário, CSRF, arquivos privados, categorias e configurações.",
+      "Testar migrações do zero, erros de processamento e consistência após reinício.",
+      "Executar no CI com PostgreSQL e arquivos de teste; não usar só mocks para afirmar integração."
+    ],
+    "priority": "P0",
+    "status": "concluida",
+    "issue_number": 27,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/27",
+    "sprint": "S03",
+    "evidence": "docs/15-sprint3-entrega.md",
+    "latest_evidence": "docs/18-homologacao-leitor.md"
+  },
+  {
+    "id": "QA-02",
+    "phase": "F08",
+    "title": "Executar E2E do fluxo completo e regressões",
+    "area": "qualidade",
+    "dependencies": [
+      "QA-01",
+      "READ-03",
+      "READ-04",
+      "VIS-03"
+    ],
+    "objective": "Demonstrar a jornada da publicação até a leitura pública.",
+    "acceptance": [
+      "Login, upload real, processamento, publicar, buscar, ler, avaliar, baixar, editar e arquivar.",
+      "Reproduzir e fechar os bugs de busca, filtro, Todos, mobile e formulário vazio.",
+      "Testar persistência após recarga e reinício e guardar capturas/evidências do candidato à entrega."
+    ],
+    "priority": "P0",
+    "status": "em_andamento",
+    "issue_number": 28,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/28",
+    "sprint": "S03",
+    "evidence": "docs/15-sprint3-entrega.md",
+    "latest_evidence": "docs/18-homologacao-leitor.md"
+  },
+  {
+    "id": "QA-03",
+    "phase": "F08",
+    "title": "Medir 300 páginas, rede, memória e concorrência",
+    "area": "qualidade",
+    "dependencies": [
+      "READ-03",
+      "PDF-04"
+    ],
+    "objective": "Validar capacidade real e limites conhecidos.",
+    "acceptance": [
+      "Executar a matriz de PDF textual e escaneado, 300/301 páginas e 200 MiB.",
+      "Medir primeira página, troca, quantidade de canvases e crescimento de memória em navegação longa.",
+      "Testar leituras e uploads simultâneos, reinício do worker e falhas de rede; registrar dispositivo/rede/limitações."
+    ],
+    "priority": "P0",
+    "status": "em_andamento",
+    "issue_number": 29,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/29",
+    "sprint": "S03",
+    "evidence": "docs/15-sprint3-entrega.md",
+    "latest_evidence": "docs/18-homologacao-leitor.md"
+  },
+  {
+    "id": "QA-04",
+    "phase": "F08",
+    "title": "Verificar acessibilidade e navegadores de entrega",
+    "area": "qualidade",
+    "dependencies": [
+      "VIS-02",
+      "VIS-03",
+      "READ-04"
+    ],
+    "objective": "Garantir uso em computador, celular e tablet.",
+    "acceptance": [
+      "Testar Chrome, Firefox, Safari e Edge atuais e toque em Safari iOS/Chrome Android.",
+      "Verificar foco, nomes acessíveis, contraste, zoom do navegador e redução de movimento.",
+      "Registrar bugs por severidade; entrega sem bloqueadores ou falhas críticas nos fluxos obrigatórios."
+    ],
+    "priority": "P0",
+    "status": "em_andamento",
+    "issue_number": 30,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/30",
+    "sprint": "S03",
+    "evidence": "docs/15-sprint3-entrega.md",
+    "latest_evidence": "docs/18-homologacao-leitor.md"
+  },
+  {
+    "id": "OPS-01",
+    "phase": "F09",
+    "title": "Preparar contêineres, HTTPS e homologação",
+    "area": "infra",
+    "dependencies": [
+      "QA-01"
+    ],
+    "objective": "Criar o ambiente semelhante à produção.",
+    "acceptance": [
+      "Separar imagens/processos web, API e worker, mantendo PostgreSQL e arquivos persistentes.",
+      "Configurar mesmo domínio para frontend/API, TLS, rotas SPA e limites alinhados de upload.",
+      "Fornecer variáveis por mecanismo de segredos, DEBUG desativado e credenciais iniciais fora do Git."
+    ],
+    "priority": "P0",
+    "status": "concluida",
+    "issue_number": 31,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/31",
+    "sprint": "S03",
+    "evidence": "docs/15-sprint3-entrega.md"
+  },
+  {
+    "id": "OPS-02",
+    "phase": "F09",
+    "title": "Implantar backup, restauração e observabilidade",
+    "area": "infra",
+    "dependencies": [
+      "OPS-01"
+    ],
+    "objective": "Permitir operar e recuperar o sistema.",
+    "acceptance": [
+      "Agendar backup de banco e arquivos fora do host e definir retenção/responsável.",
+      "Restaurar um ambiente limpo e comprovar publicações, usuários e PDFs íntegros.",
+      "Expor métricas/health, alertar falhas de worker e armazenamento, definir procedimento de rollback."
+    ],
+    "priority": "P0",
+    "status": "em_andamento",
+    "issue_number": 32,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/32",
+    "sprint": "S03",
+    "evidence": "docs/15-sprint3-entrega.md"
+  },
+  {
+    "id": "OPS-03",
+    "phase": "F09",
+    "title": "Homologar o candidato à versão 1.0",
+    "area": "qualidade",
+    "dependencies": [
+      "QA-02",
+      "QA-03",
+      "QA-04",
+      "OPS-02"
+    ],
+    "objective": "Reunir evidências finais no ambiente de entrega.",
+    "acceptance": [
+      "Usar contas de teste por perfil e publicações reais autorizadas, incluindo um PDF de 300 páginas.",
+      "Registrar aceite dos fluxos e do visual, corrigir regressões e congelar o candidato.",
+      "Confirmar domínio, hospedagem, responsáveis, capacidade e janela de publicação."
+    ],
+    "priority": "P0",
+    "status": "em_andamento",
+    "issue_number": 33,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/33",
+    "sprint": "S03",
+    "evidence": "docs/15-sprint3-entrega.md"
+  },
+  {
+    "id": "REL-01",
+    "phase": "F10",
+    "title": "Publicar a versão 1.0 e verificar produção",
+    "area": "infra",
+    "dependencies": [
+      "OPS-03"
+    ],
+    "objective": "Disponibilizar o sistema funcional no ambiente final.",
+    "acceptance": [
+      "Criar tag versionada e implantar o mesmo artefato homologado com migrações controladas.",
+      "Executar smoke test público e administrativo, leitura/download e verificação dos backups.",
+      "Reverter de forma documentada se um critério crítico falhar; guardar URL e evidências."
+    ],
+    "priority": "P0",
+    "status": "pendente",
+    "issue_number": 34,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/34",
+    "sprint": "S03"
+  },
+  {
+    "id": "REL-02",
+    "phase": "F10",
+    "title": "Entregar manuais e treinar a administração",
+    "area": "planejamento",
+    "dependencies": [
+      "OPS-03"
+    ],
+    "objective": "Permitir uso e manutenção sem depender do autor da implementação.",
+    "acceptance": [
+      "Entregar manual do professor: acesso, upload, capa, categoria, rascunho, publicar e arquivar.",
+      "Entregar guia técnico de instalação, ambiente, migrações, operação e recuperação.",
+      "Fazer demonstração com publicação completa e transferir acessos por canal apropriado, sem registrá-los no Git."
+    ],
+    "priority": "P1",
+    "status": "em_andamento",
+    "issue_number": 35,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/35",
+    "sprint": "S03",
+    "evidence": "docs/15-sprint3-entrega.md"
+  },
+  {
+    "id": "REL-03",
+    "phase": "F10",
+    "title": "Concluir aceite final e estabilização",
+    "area": "qualidade",
+    "dependencies": [
+      "REL-01",
+      "REL-02"
+    ],
+    "objective": "Encerrar a entrega com evidências e pendências transparentes.",
+    "acceptance": [
+      "Verificar todos os critérios obrigatórios e rastrear cada tarefa ao seu resultado.",
+      "Registrar versão, responsável, data, limitações e itens futuros em termo de entrega.",
+      "Acompanhar a janela de estabilização acordada, resolver bloqueadores e atualizar a documentação."
+    ],
+    "priority": "P0",
+    "status": "em_andamento",
+    "issue_number": 36,
+    "issue_url": "https://github.com/Dj157/revista-psicologia-unieuro/issues/36",
+    "sprint": "S03",
+    "evidence": "docs/15-sprint3-entrega.md"
+  }
+]
