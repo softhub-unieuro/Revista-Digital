@@ -1,0 +1,112 @@
+name: Verificações do projeto
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - run: npm audit --audit-level=moderate
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: revista
+          POSTGRES_PASSWORD: ci-test-only
+          POSTGRES_DB: revista
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U revista -d revista"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+      redis:
+        image: redis:8-alpine
+        ports: ['6379:6379']
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://revista:ci-test-only@127.0.0.1:5432/revista
+      REDIS_URL: redis://127.0.0.1:6379/0
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: '0.11.14'
+          python-version: '3.12'
+      - run: python scripts/init_env.py
+      - run: uv sync --project backend --locked
+      - run: uv run --project backend ruff check --config backend/pyproject.toml backend scripts
+      - run: uv run --project backend ruff format --config backend/pyproject.toml --check backend scripts
+      - run: uv run --project backend python backend/manage.py migrate --noinput
+      - run: uv run --project backend python backend/manage.py makemigrations --check --dry-run
+      - run: uv run --project backend pytest backend/tests
+      - run: uv run --project backend python backend/manage.py spectacular --file /tmp/openapi.yaml --validate --fail-on-warn
+      - run: diff docs/openapi.yaml /tmp/openapi.yaml
+
+  production:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: '0.11.14'
+          python-version: '3.12'
+      - run: uv sync --project backend --locked
+      - name: Preparar configuração e certificado apenas para QA
+        run: |
+          mkdir -p "$RUNNER_TEMP/revista-tls"
+          openssl req -x509 -newkey rsa:2048 -nodes -keyout "$RUNNER_TEMP/revista-tls/privkey.pem" -out "$RUNNER_TEMP/revista-tls/fullchain.pem" -days 2 -subj /CN=localhost -addext subjectAltName=DNS:localhost,IP:127.0.0.1 > /dev/null 2>&1
+          python scripts/init_production_env.py --output "$RUNNER_TEMP/revista.env" --origin https://127.0.0.1:15443 --tls-dir "$RUNNER_TEMP/revista-tls"
+          uv run --project backend python scripts/generate_pdf_fixtures.py
+      - name: Iniciar imagens de produção com HTTPS
+        run: docker compose --env-file "$RUNNER_TEMP/revista.env" -f compose.production.yaml -p revista-qa up --build -d --wait --wait-timeout 180
+      - name: Jornada real de publicação e PDF
+        run: python scripts/smoke_production.py --env-file "$RUNNER_TEMP/revista.env" --project revista-qa --ca "$RUNNER_TEMP/revista-tls/fullchain.pem" --output "$RUNNER_TEMP/smoke.json"
+      - name: Backup consistente
+        run: python scripts/production_backup.py backup --env-file "$RUNNER_TEMP/revista.env" --project revista-qa --directory "$RUNNER_TEMP/revista-backup"
+      - name: Preparar destino isolado
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])
+          source=(root/'revista.env').read_text().splitlines()
+          changes={'PUBLIC_ORIGIN':'https://127.0.0.1:15444','DJANGO_CSRF_TRUSTED_ORIGINS':'https://127.0.0.1:15444','HTTPS_BIND':'127.0.0.1:15444','HTTP_BIND':'127.0.0.1:15081','PRODUCTION_ENV_FILE':str(root/'restore.env')}
+          target=root/'restore.env'
+          target.write_text('\n'.join(key+'='+changes.get(key,value) for line in source for key,value in [line.split('=',1)])+'\n')
+          target.chmod(0o600)
+          PY
+          docker compose --env-file "$RUNNER_TEMP/restore.env" -f compose.production.yaml -p revista-qa-restore up -d --wait db redis
+      - name: Restaurar e comprovar banco e arquivos
+        run: |
+          python scripts/production_backup.py restore --env-file "$RUNNER_TEMP/restore.env" --project revista-qa-restore --directory "$RUNNER_TEMP/revista-backup"
+          docker compose --env-file "$RUNNER_TEMP/restore.env" -f compose.production.yaml -p revista-qa-restore up -d --wait --wait-timeout 180
+          python scripts/verify_restored_backup.py --origin https://127.0.0.1:15444 --ca "$RUNNER_TEMP/revista-tls/fullchain.pem" --report "$RUNNER_TEMP/smoke.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: smoke-producao-sem-credenciais
+          path: ${{ runner.temp }}/smoke.json
+      - name: Encerrar projetos descartáveis
+        if: always()
+        run: |
+          docker compose --env-file "$RUNNER_TEMP/revista.env" -f compose.production.yaml -p revista-qa down -v || true
+          if test -f "$RUNNER_TEMP/restore.env"; then docker compose --env-file "$RUNNER_TEMP/restore.env" -f compose.production.yaml -p revista-qa-restore down -v; fi

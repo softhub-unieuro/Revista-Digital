@@ -1,0 +1,77 @@
+name: revista-psicologia
+x-backend: &backend
+  image: revista-psicologia-backend:dev
+  build: ./backend
+  env_file: .env
+  environment:
+    DJANGO_SETTINGS_MODULE: config.settings.development
+    DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    REDIS_URL: redis://redis:6379/0
+    PRIVATE_STORAGE_ROOT: /storage
+  volumes:
+    - ./backend:/app
+    - backend_venv:/app/.venv
+    - private_storage:/storage
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports: ["127.0.0.1:15432:5432"]
+    volumes: [postgres_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  redis:
+    image: redis:8-alpine
+    ports: ["127.0.0.1:16379:6379"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  migrate:
+    <<: *backend
+    command: uv run --frozen python manage.py migrate --noinput
+    depends_on:
+      db: {condition: service_healthy}
+  api:
+    <<: *backend
+    command: uv run --frozen python manage.py runserver 0.0.0.0:8000
+    ports: ["127.0.0.1:18000:8000"]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      redis: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "uv", "run", "--frozen", "python", "-c", "from urllib.request import urlopen; urlopen('http://127.0.0.1:8000/health/ready')"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+  worker:
+    <<: *backend
+    command: sh -c "uv run --frozen python manage.py requeue_uploads && exec uv run --frozen celery -A config worker --loglevel=INFO --concurrency=1"
+    mem_limit: 768m
+    cpus: 1.0
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      redis: {condition: service_healthy}
+  frontend:
+    build: ./frontend
+    ports: ["127.0.0.1:15173:5173"]
+    environment:
+      VITE_PROXY_TARGET: http://api:8000
+      VITE_USE_POLLING: "true"
+    volumes:
+      - ./frontend:/app
+      - frontend_modules:/app/node_modules
+    depends_on:
+      api: {condition: service_healthy}
+volumes:
+  postgres_data:
+  private_storage:
+  backend_venv:
+  frontend_modules:

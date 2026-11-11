@@ -1,0 +1,32 @@
+{
+  "source": "unieuro-revista-frontend-final",
+  "archive_sha256": "6e534178b58566d7389ebf6f6cf6d7975f0a51f10061101ce73a72f6b794537a",
+  "adopted_on": "2026-11-03",
+  "reason": "Pacote final fornecido pelo responsável; reutilizado sem reconstruir as telas.",
+  "sha256": {
+    "preview.html": "9a22dd4e97960b49182cae14b6667e904b44a3ccc31b6a7d498d509cce1d8160",
+    "index.html": "03b0303251e0b2d30c2e7ac75d0256bf3f9ecb3f81390306b63eb84cd8263c47",
+    "admin-preview.html": "eb5c3730ef65d6695058fc02cf1d23bce4cb14ca84e2ef8a40291a6159257740",
+    "vite.config.js": "49e4ed2525703d6e8bc94ccee00a5ab0de644cc527bf4368d366566944f5604b",
+    "README.md": "bf421de9469ab7a4c71e7f0c1e1f6d063262d424730a31f4e383ef2e51178935",
+    ".gitignore": "3f1cd136679b09dbc1a808d61bcd810e7242327f759b99d5ad1c0a473944e822",
+    "package.json": "d862ad498e4b7be0cc18b1d767e364dd143403369436850560368886b4df0378",
+    "public/brand-lockup.png": "c12cc8d9b52bd2fadc50a9d4e712ff203eaabc02eb36afbf5bc6eb875b9db69d",
+    "public/unieuro-logo.png": "5f7a53f59d3187ab682bd92d2d7bfeec6a036c1537c4efd3d367ae963588d905",
+    "public/footer-logo.png": "77f6da720fbbbae36f84b7d132d45e962acd7d10a98a02cf2d67d42ef96a8b68",
+    "src/styles.css": "f937e20a5f6e6f779d0a78611d1bfd32d59f004ba935693dfdea6697f4534b02",
+    "src/main.jsx": "e5c96aa865105db4bbf93a17bad233d28d6391695d1a1a51baed77e64f7a39bb",
+    "src/data.js": "d191ddc8483ccc357bd5aa9a3f155f50e3ff2b5feb755efe4b61a09b90f11694",
+    "public/covers/cover-hero.png": "ccbd39172d7996bc818a167e70ab5a74e5148d84f94b6cf2d7d803ee71dcde08",
+    "public/covers/cover-11.png": "307530a508e9921f1a2e8aadea585c42013959dbf1626aad0d40fc1902827917",
+    "public/covers/cover-10.png": "416d2947b0c3b4610f56c64ecbbf2e3c3454ab48431e77f3daf88822b66d732f",
+    "public/covers/cover-2.svg": "50426ebdd53a3853102982c02732df2857ac928de8ee22e6ae788a54e2e2789a",
+    "public/covers/cover-09.png": "cfabbef4b8096662374074ec71d8fb6fcc239e6726310f2cadd61ae63e3f1be7",
+    "public/covers/cover-08.png": "7aa3dbe7f0114c0ff8bc375025813058a5ce4e17b5582a499f2661399520a076",
+    "public/covers/cover-3.svg": "309f8c4995db55368f421c9891d3980b3c671e3d2197199f5a18408484072a74",
+    "public/covers/cover-1.svg": "bc3f7b84a92c1b551473fd108c7889ee156eaa73dba11fbdd51eb1886eec28ae",
+    "public/covers/cover-4.svg": "1836a0d3bf5c5ceb287f6bac0583aa5e0f980d6ba20d813fd6a5a9bed64e1ef5",
+    "public/covers/cover-5.svg": "201502b72b0e642096fe6d7ab8dcb8518259e14b6340abc55018eb758b8c3b1d",
+    "public/covers/cover-6.svg": "b8c8413267de5385d01ea6c7e80e17de7a7e0a156718c1ad5d2a074b0777355e"
+  }
+}

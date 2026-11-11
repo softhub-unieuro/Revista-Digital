@@ -1,0 +1,62 @@
+{
+  "date": "2026-11-03",
+  "stage": "planejamento",
+  "frontend_source_files": 16,
+  "frontend_copy_sha256_verified": true,
+  "npm_ci": "passed",
+  "npm_run_build": "passed",
+  "node_local": "26.0.0",
+  "relative_markdown_links": "passed",
+  "task_dependencies": "acyclic",
+  "tasks": 36,
+  "phases": 11,
+  "dependency_audit": {
+    "status": "findings_pending",
+    "high": 2,
+    "critical": 0,
+    "packages": [
+      "vite",
+      "source-map-js"
+    ],
+    "task": "FUND-01"
+  },
+  "backend_implemented": false,
+  "real_pdf_300_pages_tested": false,
+  "github": {
+    "repository": "Dj157/revista-psicologia-unieuro",
+    "visibility": "private",
+    "issues_created": 36,
+    "milestones_created": 11,
+    "baseline_workflow": "passed",
+    "baseline_workflow_url": "https://github.com/Dj157/revista-psicologia-unieuro/actions/runs/41683411350",
+    "baseline_commit": "32f555dbe8fff6e8a37e7069da784ddae7b14e22"
+  },
+  "latest_development": {
+    "date": "2026-11-03",
+    "branch": "codex/f01-fundacao",
+    "active_sprints": 3,
+    "frontend_source": "unieuro-revista-frontend-final",
+    "frontend_reused": true,
+    "implemented": [
+      "backend scaffold",
+      "postgres migrations",
+      "custom user",
+      "session login/logout",
+      "csrf",
+      "server login limit",
+      "frontend route authentication",
+      "health",
+      "OpenAPI",
+      "Compose"
+    ],
+    "tests_passed": 10,
+    "npm_audit_vulnerabilities": 0,
+    "real_pdf_300_pages_tested": false,
+    "editorial_crud_implemented": false,
+    "github_state": "ci_aprovado",
+    "pull_request": "https://github.com/Dj157/revista-psicologia-unieuro/pull/37",
+    "ci": "https://github.com/Dj157/revista-psicologia-unieuro/actions/runs/41691629005",
+    "mobile_document_width": 390,
+    "mobile_viewport_width": 390
+  }
+}

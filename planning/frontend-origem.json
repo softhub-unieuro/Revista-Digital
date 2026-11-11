@@ -1,0 +1,23 @@
+{
+  "repository": "https://github.com/softhub-unieuro/Revista-Digital",
+  "commit": "17ba76c75ffee75c3593d5f7ad962b0854700f7b",
+  "copied_on": "2026-11-03",
+  "sha256": {
+    ".gitignore": "3a3bcf768c25d0483b1e4b81f5a2879def4f8160c994929ae3a997511dbd84ae",
+    "README.md": "0fff77fecd0f76aa846b841ab74fb2650c4b1f56aec7a0a4ff5ef452ec35014e",
+    "index.html": "03b0303251e0b2d30c2e7ac75d0256bf3f9ecb3f81390306b63eb84cd8263c47",
+    "package-lock.json": "882bbeba9fe631eff753210a1d2db9842e868018cfe09d60f0906c17cca85f38",
+    "package.json": "d862ad498e4b7be0cc18b1d767e364dd143403369436850560368886b4df0378",
+    "preview.html": "d271fbf11173634df06bdccb50be796d06161e82cb643622370678535e356885",
+    "public/covers/cover-1.svg": "bc3f7b84a92c1b551473fd108c7889ee156eaa73dba11fbdd51eb1886eec28ae",
+    "public/covers/cover-2.svg": "50426ebdd53a3853102982c02732df2857ac928de8ee22e6ae788a54e2e2789a",
+    "public/covers/cover-3.svg": "309f8c4995db55368f421c9891d3980b3c671e3d2197199f5a18408484072a74",
+    "public/covers/cover-4.svg": "1836a0d3bf5c5ceb287f6bac0583aa5e0f980d6ba20d813fd6a5a9bed64e1ef5",
+    "public/covers/cover-5.svg": "201502b72b0e642096fe6d7ab8dcb8518259e14b6340abc55018eb758b8c3b1d",
+    "public/covers/cover-6.svg": "b8c8413267de5385d01ea6c7e80e17de7a7e0a156718c1ad5d2a074b0777355e",
+    "src/data.js": "b1b0265186817b7957b42baa49ce01c581f39efcf7e0293628b0e0a4c89f3bb2",
+    "src/main.jsx": "98ee2232884c6a583acefd5fbe9771ced6faa472f90754ba021233365f8e9545",
+    "src/styles.css": "ce88f2be482e762159db0ad352e6da72759ea784f2d3ff89a46ca90d5b7a1e65",
+    "vite.config.js": "49e4ed2525703d6e8bc94ccee00a5ab0de644cc527bf4368d366566944f5604b"
+  }
+}

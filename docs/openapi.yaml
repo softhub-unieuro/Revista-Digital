@@ -1,0 +1,2115 @@
+openapi: 3.1.0
+info:
+  title: Revista Científica de Psicologia UNIEURO
+  version: 0.1.0
+  description: Endpoints implementados; contrato futuro em docs/05-api.md.
+paths:
+  /api/v1/admin/audit:
+    get:
+      operationId: api_v1_admin_audit_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: Um número de página dentro do conjunto de resultados paginado.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Número de resultados a serem retornados por página.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAuditList'
+          description: ''
+  /api/v1/admin/audit/{id}:
+    get:
+      operationId: api_v1_admin_audit_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: Um valor inteiro único que identifica este audit event.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Audit'
+          description: ''
+  /api/v1/admin/categories:
+    get:
+      operationId: api_v1_admin_categories_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: Um número de página dentro do conjunto de resultados paginado.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Número de resultados a serem retornados por página.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCategoryList'
+          description: ''
+    post:
+      operationId: api_v1_admin_categories_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Category'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Category'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
+  /api/v1/admin/categories/{id}:
+    get:
+      operationId: api_v1_admin_categories_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: Um string UUID que identifica este category.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
+    patch:
+      operationId: api_v1_admin_categories_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: Um string UUID que identifica este category.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCategory'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCategory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCategory'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
+  /api/v1/admin/files/{id}:
+    get:
+      operationId: api_v1_admin_files_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - documents
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+          description: ''
+        '206':
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+          description: ''
+  /api/v1/admin/jobs/{id}:
+    get:
+      operationId: api_v1_admin_jobs_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - documents
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+          description: ''
+  /api/v1/admin/jobs/{id}/cover:
+    post:
+      operationId: api_v1_admin_jobs_cover_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - documents
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CoverUpload'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+          description: ''
+  /api/v1/admin/jobs/{id}/retry:
+    post:
+      operationId: api_v1_admin_jobs_retry_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - documents
+      security:
+      - cookieAuth: []
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+          description: ''
+  /api/v1/admin/people:
+    get:
+      operationId: api_v1_admin_people_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: Um número de página dentro do conjunto de resultados paginado.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Número de resultados a serem retornados por página.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPersonList'
+          description: ''
+    post:
+      operationId: api_v1_admin_people_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Person'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Person'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Person'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+          description: ''
+  /api/v1/admin/people/{id}:
+    get:
+      operationId: api_v1_admin_people_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: Um string UUID que identifica este person.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+          description: ''
+    patch:
+      operationId: api_v1_admin_people_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: Um string UUID que identifica este person.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPerson'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPerson'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPerson'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+          description: ''
+  /api/v1/admin/publications:
+    get:
+      operationId: api_v1_admin_publications_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: Um número de página dentro do conjunto de resultados paginado.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Número de resultados a serem retornados por página.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPublicationList'
+          description: ''
+    post:
+      operationId: api_v1_admin_publications_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Publication'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Publication'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Publication'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Publication'
+          description: ''
+  /api/v1/admin/publications/{id}:
+    get:
+      operationId: api_v1_admin_publications_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: Um string UUID que identifica este publication.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Publication'
+          description: ''
+    patch:
+      operationId: api_v1_admin_publications_partial_update
+      parameters:
+      - in: header
+        name: If-Match
+        schema:
+          type: string
+        description: 'Token da edição lida: "UUID:edit_version". Ausente: 428; antigo/inválido:
+          412.'
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: Um string UUID que identifica este publication.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPublication'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPublication'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPublication'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Publication'
+          description: ''
+        '412':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionError'
+          description: ''
+        '428':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionError'
+          description: ''
+  /api/v1/admin/publications/{id}/archive:
+    post:
+      operationId: api_v1_admin_publications_archive_create
+      parameters:
+      - in: header
+        name: If-Match
+        schema:
+          type: string
+        description: 'Token da edição lida: "UUID:edit_version". Ausente: 428; antigo/inválido:
+          412.'
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: Um string UUID que identifica este publication.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Publication'
+          description: ''
+        '412':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionError'
+          description: ''
+        '428':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionError'
+          description: ''
+  /api/v1/admin/publications/{id}/publish:
+    post:
+      operationId: api_v1_admin_publications_publish_create
+      parameters:
+      - in: header
+        name: If-Match
+        schema:
+          type: string
+        description: 'Token da edição lida: "UUID:edit_version". Ausente: 428; antigo/inválido:
+          412.'
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: Um string UUID que identifica este publication.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Publication'
+          description: ''
+        '412':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionError'
+          description: ''
+        '428':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionError'
+          description: ''
+  /api/v1/admin/publications/{id}/restore:
+    post:
+      operationId: api_v1_admin_publications_restore_create
+      parameters:
+      - in: header
+        name: If-Match
+        schema:
+          type: string
+        description: 'Token da edição lida: "UUID:edit_version". Ausente: 428; antigo/inválido:
+          412.'
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: Um string UUID que identifica este publication.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Publication'
+          description: ''
+        '412':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionError'
+          description: ''
+        '428':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionError'
+          description: ''
+  /api/v1/admin/publications/{id}/revisions:
+    get:
+      operationId: api_v1_admin_publications_revisions_list
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: Um string UUID que identifica este publication.
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: Um número de página dentro do conjunto de resultados paginado.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Número de resultados a serem retornados por página.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRevisionList'
+          description: ''
+  /api/v1/admin/settings:
+    get:
+      operationId: api_v1_admin_settings_retrieve
+      tags:
+      - settings
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Settings'
+          description: ''
+    patch:
+      operationId: api_v1_admin_settings_partial_update
+      tags:
+      - settings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSettings'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSettings'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSettings'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Settings'
+          description: ''
+  /api/v1/admin/uploads:
+    post:
+      operationId: api_v1_admin_uploads_create
+      tags:
+      - documents
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Upload'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+          description: ''
+        '413':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadSizeError'
+          description: ''
+  /api/v1/admin/users:
+    get:
+      operationId: api_v1_admin_users_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: Um número de página dentro do conjunto de resultados paginado.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Número de resultados a serem retornados por página.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedManagedUserList'
+          description: ''
+    post:
+      operationId: api_v1_admin_users_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ManagedUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ManagedUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ManagedUser'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ManagedUser'
+          description: ''
+  /api/v1/admin/users/{id}:
+    get:
+      operationId: api_v1_admin_users_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: Um string UUID que identifica este user.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ManagedUser'
+          description: ''
+    patch:
+      operationId: api_v1_admin_users_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: Um string UUID que identifica este user.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedManagedUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedManagedUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedManagedUser'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ManagedUser'
+          description: ''
+  /api/v1/auth/csrf:
+    get:
+      operationId: api_v1_auth_csrf_retrieve
+      tags:
+      - authentication
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Csrf'
+          description: ''
+  /api/v1/auth/login:
+    post:
+      operationId: api_v1_auth_login_create
+      tags:
+      - authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Credentials'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Credentials'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Credentials'
+        required: true
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
+  /api/v1/auth/logout:
+    post:
+      operationId: api_v1_auth_logout_create
+      tags:
+      - authentication
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/v1/auth/me:
+    get:
+      operationId: api_v1_auth_me_retrieve
+      tags:
+      - authentication
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+          description: ''
+  /api/v1/public/catalog:
+    get:
+      operationId: api_v1_public_catalog_retrieve
+      tags:
+      - catalog
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogSummary'
+          description: ''
+  /api/v1/public/categories:
+    get:
+      operationId: api_v1_public_categories_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: Um número de página dentro do conjunto de resultados paginado.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Número de resultados a serem retornados por página.
+        schema:
+          type: integer
+      tags:
+      - api
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCategoryList'
+          description: ''
+  /api/v1/public/categories/{slug}:
+    get:
+      operationId: api_v1_public_categories_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
+  /api/v1/public/publications:
+    get:
+      operationId: api_v1_public_publications_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: Um número de página dentro do conjunto de resultados paginado.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Número de resultados a serem retornados por página.
+        schema:
+          type: integer
+      tags:
+      - api
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPublicationList'
+          description: ''
+  /api/v1/public/publications/{slug}:
+    get:
+      operationId: api_v1_public_publications_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Publication'
+          description: ''
+  /api/v1/public/publications/{slug}/{kind}:
+    get:
+      operationId: public_publication_file
+      parameters:
+      - in: path
+        name: kind
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - documents
+      responses:
+        '200':
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+          description: ''
+        '206':
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+          description: ''
+  /api/v1/public/publications/{slug}/rating:
+    get:
+      operationId: api_v1_public_publications_rating_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - ratings
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentScore'
+          description: ''
+    post:
+      operationId: api_v1_public_publications_rating_create
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - ratings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Score'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Score'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Score'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Score'
+          description: ''
+  /api/v1/public/settings:
+    get:
+      operationId: api_v1_public_settings_retrieve
+      tags:
+      - settings
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Settings'
+          description: ''
+  /health/live:
+    get:
+      operationId: health_live_retrieve
+      tags:
+      - health
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Live'
+          description: ''
+  /health/ready:
+    get:
+      operationId: health_ready_retrieve
+      tags:
+      - health
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ready'
+          description: ''
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ready'
+          description: ''
+components:
+  schemas:
+    Audit:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        actor_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          readOnly: true
+        actor_name:
+          type: string
+          readOnly: true
+        action:
+          type: string
+          maxLength: 80
+        target:
+          type: string
+          maxLength: 160
+        target_label:
+          type: string
+          maxLength: 255
+        fields: {}
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - action
+      - actor_id
+      - actor_name
+      - created_at
+      - id
+      - target
+    CatalogSummary:
+      type: object
+      properties:
+        total:
+          type: integer
+        years:
+          type: array
+          items:
+            type: integer
+        featured:
+          oneOf:
+          - $ref: '#/components/schemas/Publication'
+          - type: 'null'
+      required:
+      - featured
+      - total
+      - years
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        slug:
+          type: string
+          maxLength: 50
+          pattern: ^[-a-zA-Z0-9_]+$
+        icon:
+          type: string
+          maxLength: 30
+        active:
+          type: boolean
+        position:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        count:
+          type: integer
+          readOnly: true
+          default: 0
+      required:
+      - count
+      - id
+      - name
+      - slug
+    CoverUpload:
+      type: object
+      properties:
+        file:
+          type:
+          - string
+          - 'null'
+          format: uri
+        reset:
+          type: boolean
+          default: false
+    Credentials:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - email
+      - password
+    Csrf:
+      type: object
+      properties:
+        csrf_token:
+          type: string
+      required:
+      - csrf_token
+    CurrentScore:
+      type: object
+      properties:
+        score:
+          type:
+          - integer
+          - 'null'
+          maximum: 5
+          minimum: 1
+      required:
+      - score
+    Document:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        state:
+          $ref: '#/components/schemas/StateEnum'
+        page_count:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        size_bytes:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        original_name:
+          type: string
+          maxLength: 255
+        error_code:
+          type: string
+          maxLength: 50
+        error_message:
+          type: string
+          maxLength: 255
+        cover_url:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        file_url:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        cover_version:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - cover_url
+      - cover_version
+      - file_url
+      - id
+      - original_name
+    Error:
+      type: object
+      properties:
+        detail:
+          type: string
+      required:
+      - detail
+    KindEnum:
+      enum:
+      - author
+      - reviewer
+      type: string
+      description: |-
+        * `author` - Autor
+        * `reviewer` - Parecerista
+    Live:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+      - status
+    ManagedUser:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        name:
+          type: string
+          maxLength: 200
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        role_label:
+          type: string
+          readOnly: true
+        is_active:
+          type: boolean
+          title: Ativo
+          description: Indica que o usuário será tratado como ativo. Ao invés de excluir
+            contas de usuário, desmarque isso.
+        password:
+          type: string
+          writeOnly: true
+        date_joined:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Data de registro
+      required:
+      - date_joined
+      - email
+      - id
+      - name
+      - role_label
+    PaginatedAuditList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Audit'
+    PaginatedCategoryList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+    PaginatedManagedUserList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ManagedUser'
+    PaginatedPersonList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+    PaginatedPublicationList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Publication'
+    PaginatedRevisionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Revision'
+    PatchedCategory:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        slug:
+          type: string
+          maxLength: 50
+          pattern: ^[-a-zA-Z0-9_]+$
+        icon:
+          type: string
+          maxLength: 30
+        active:
+          type: boolean
+        position:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        count:
+          type: integer
+          readOnly: true
+          default: 0
+    PatchedManagedUser:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        name:
+          type: string
+          maxLength: 200
+        role:
+          $ref: '#/components/schemas/RoleEnum'
+        role_label:
+          type: string
+          readOnly: true
+        is_active:
+          type: boolean
+          title: Ativo
+          description: Indica que o usuário será tratado como ativo. Ao invés de excluir
+            contas de usuário, desmarque isso.
+        password:
+          type: string
+          writeOnly: true
+        date_joined:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Data de registro
+    PatchedPerson:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        kind:
+          $ref: '#/components/schemas/KindEnum'
+        name:
+          type: string
+          maxLength: 200
+        email:
+          oneOf:
+          - type: string
+            format: email
+            maxLength: 254
+          - type: string
+            maxLength: 0
+        institution:
+          type: string
+          maxLength: 200
+        biography:
+          type: string
+        active:
+          type: boolean
+        count:
+          type: integer
+          readOnly: true
+          default: 0
+    PatchedPublication:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        slug:
+          type: string
+          readOnly: true
+          pattern: ^[-a-zA-Z0-9_]+$
+        client_key:
+          type: string
+          format: uuid
+          writeOnly: true
+        title:
+          type: string
+          maxLength: 255
+        issue:
+          type: string
+          maxLength: 50
+        publication_date:
+          type: string
+          format: date
+        description:
+          type: string
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StatusEnum'
+          readOnly: true
+        category_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+            writeOnly: true
+          writeOnly: true
+        author_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+            writeOnly: true
+          writeOnly: true
+        reviewer_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+            writeOnly: true
+          writeOnly: true
+        authors:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+          readOnly: true
+        reviewers:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+          readOnly: true
+        categories:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+          readOnly: true
+        document_id:
+          type: string
+          format: uuid
+          writeOnly: true
+        document_version:
+          type: string
+          format: uuid
+          readOnly: true
+        page_count:
+          type: integer
+          readOnly: true
+          default: 0
+        file_size_bytes:
+          type: integer
+          readOnly: true
+          default: 0
+        processing_state:
+          type: string
+          readOnly: true
+          default: ''
+        cover_url:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        file_url:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        download_url:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        rating_average:
+          type: number
+          format: double
+          readOnly: true
+          default: 0.0
+        rating_count:
+          type: integer
+          readOnly: true
+          default: 0
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        edit_version:
+          type: integer
+          readOnly: true
+    PatchedSettings:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+        issn:
+          oneOf:
+          - type: string
+            pattern: ^\d{4}-\d{3}[\dX]$
+            maxLength: 9
+          - type: string
+            maxLength: 0
+        ratings_enabled:
+          type: boolean
+        downloads_enabled:
+          type: boolean
+        public_archive_enabled:
+          type: boolean
+        author_guidelines:
+          type: string
+        editorial_policy:
+          type: string
+        contact_email:
+          oneOf:
+          - type: string
+            format: email
+            maxLength: 254
+          - type: string
+            maxLength: 0
+        contact_text:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    Person:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        kind:
+          $ref: '#/components/schemas/KindEnum'
+        name:
+          type: string
+          maxLength: 200
+        email:
+          oneOf:
+          - type: string
+            format: email
+            maxLength: 254
+          - type: string
+            maxLength: 0
+        institution:
+          type: string
+          maxLength: 200
+        biography:
+          type: string
+        active:
+          type: boolean
+        count:
+          type: integer
+          readOnly: true
+          default: 0
+      required:
+      - count
+      - id
+      - kind
+      - name
+    Publication:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        slug:
+          type: string
+          readOnly: true
+          pattern: ^[-a-zA-Z0-9_]+$
+        client_key:
+          type: string
+          format: uuid
+          writeOnly: true
+        title:
+          type: string
+          maxLength: 255
+        issue:
+          type: string
+          maxLength: 50
+        publication_date:
+          type: string
+          format: date
+        description:
+          type: string
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StatusEnum'
+          readOnly: true
+        category_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+            writeOnly: true
+          writeOnly: true
+        author_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+            writeOnly: true
+          writeOnly: true
+        reviewer_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+            writeOnly: true
+          writeOnly: true
+        authors:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+          readOnly: true
+        reviewers:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+          readOnly: true
+        categories:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+          readOnly: true
+        document_id:
+          type: string
+          format: uuid
+          writeOnly: true
+        document_version:
+          type: string
+          format: uuid
+          readOnly: true
+        page_count:
+          type: integer
+          readOnly: true
+          default: 0
+        file_size_bytes:
+          type: integer
+          readOnly: true
+          default: 0
+        processing_state:
+          type: string
+          readOnly: true
+          default: ''
+        cover_url:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        file_url:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        download_url:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        rating_average:
+          type: number
+          format: double
+          readOnly: true
+          default: 0.0
+        rating_count:
+          type: integer
+          readOnly: true
+          default: 0
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        edit_version:
+          type: integer
+          readOnly: true
+      required:
+      - authors
+      - categories
+      - category_ids
+      - cover_url
+      - document_id
+      - document_version
+      - download_url
+      - edit_version
+      - file_size_bytes
+      - file_url
+      - id
+      - issue
+      - page_count
+      - processing_state
+      - publication_date
+      - rating_average
+      - rating_count
+      - reviewers
+      - slug
+      - status
+      - title
+      - updated_at
+    Ready:
+      type: object
+      properties:
+        status:
+          type: string
+        database:
+          type: string
+        broker:
+          type: string
+      required:
+      - broker
+      - database
+      - status
+    Revision:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        document_version:
+          type: string
+          format: uuid
+          readOnly: true
+        page_count:
+          type: integer
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        snapshot: {}
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        preview_url:
+          type: string
+          readOnly: true
+      required:
+      - created_at
+      - document_version
+      - id
+      - page_count
+      - preview_url
+      - snapshot
+      - status
+    RoleEnum:
+      enum:
+      - admin
+      - editor
+      - collaborator
+      type: string
+      description: |-
+        * `admin` - Administrador
+        * `editor` - Editor/Publicador
+        * `collaborator` - Colaborador
+    Score:
+      type: object
+      properties:
+        score:
+          type: integer
+          maximum: 5
+          minimum: 1
+      required:
+      - score
+    Session:
+      type: object
+      properties:
+        authenticated:
+          type: boolean
+        user:
+          oneOf:
+          - $ref: '#/components/schemas/User'
+          - type: 'null'
+      required:
+      - authenticated
+      - user
+    Settings:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+        issn:
+          oneOf:
+          - type: string
+            pattern: ^\d{4}-\d{3}[\dX]$
+            maxLength: 9
+          - type: string
+            maxLength: 0
+        ratings_enabled:
+          type: boolean
+        downloads_enabled:
+          type: boolean
+        public_archive_enabled:
+          type: boolean
+        author_guidelines:
+          type: string
+        editorial_policy:
+          type: string
+        contact_email:
+          oneOf:
+          - type: string
+            format: email
+            maxLength: 254
+          - type: string
+            maxLength: 0
+        contact_text:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - updated_at
+    StateEnum:
+      enum:
+      - queued
+      - processing
+      - ready
+      - failed
+      type: string
+      description: |-
+        * `queued` - Aguardando
+        * `processing` - Processando
+        * `ready` - Pronto
+        * `failed` - Falhou
+    StatusEnum:
+      enum:
+      - draft
+      - published
+      - archived
+      type: string
+      description: |-
+        * `draft` - Rascunho
+        * `published` - Publicada
+        * `archived` - Arquivada
+    Upload:
+      type: object
+      properties:
+        file:
+          type: string
+          format: uri
+      required:
+      - file
+    UploadSizeError:
+      type: object
+      properties:
+        detail:
+          type: string
+      required:
+      - detail
+    User:
+      type: object
+      properties:
+        is_admin:
+          type: boolean
+          readOnly: true
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        role:
+          type: string
+        role_label:
+          type: string
+      required:
+      - email
+      - id
+      - is_admin
+      - name
+      - role
+      - role_label
+    VersionError:
+      type: object
+      properties:
+        detail:
+          type: string
+      required:
+      - detail
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
