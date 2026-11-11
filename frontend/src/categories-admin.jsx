@@ -58,8 +58,16 @@ export function CategoriesAdmin() {
         )
       }
     >
-      {(error || adminError) && <p role="alert">{error || adminError}</p>}
-      {message && <p role="status">{message}</p>}
+      {(error || adminError) && (
+        <p className="action-feedback action-feedback--error" role="alert">
+          {error || adminError}
+        </p>
+      )}
+      {message && (
+        <p className="action-feedback action-feedback--success" role="status">
+          {message}
+        </p>
+      )}
       {form && (
         <form
           className="admin-panel form-panel publication-form"

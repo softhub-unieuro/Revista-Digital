@@ -51,9 +51,6 @@ function Header() {
           <NavLink to="/sobre">Sobre</NavLink>
         </nav>
         <div className="header-right">
-          <small className="header-tagline">
-            Sua escolha para um grande futuro.
-          </small>
           <form className="header-search" onSubmit={submit}>
             <Icon name="search" size={17} />
             <input
@@ -79,7 +76,6 @@ function Footer() {
           <Link to="/sobre#politica">Política Editorial</Link>
           <Link to="/sobre#contato">Contato</Link>
         </nav>
-        <div className="footer-tagline">Ciência. Pessoas. Possibilidades.</div>
       </div>
     </footer>
   );
@@ -383,7 +379,8 @@ function EditionDetail() {
   const { slug } = useParams();
   const e = editions.find((x) => x.slug === slug);
   const [rating, setRating] = useState(0);
-  const [ratingError, setRatingError] = useState("");
+  const [ratingError, setRatingError] = useState(""),
+    [ratingMessage, setRatingMessage] = useState("");
   useEffect(() => {
     const controller = new AbortController();
     if (!settings?.ratings_enabled) return;
@@ -404,8 +401,10 @@ function EditionDetail() {
       });
       setRating(score);
       setRatingError("");
+      setRatingMessage("Sua avaliação foi registrada.");
       refresh();
     } catch (error) {
+      setRatingMessage("");
       setRatingError(error.message);
     }
   }
@@ -471,11 +470,7 @@ function EditionDetail() {
         <section className="edition-about">
           <article>
             <h2>Sobre esta edição</h2>
-            <p>
-              {e.subtitle} A publicação reúne pesquisas, ensaios e reflexões
-              desenvolvidos no contexto acadêmico do curso de Psicologia do
-              Centro Universitário UNIEURO.
-            </p>
+            {e.subtitle && <p>{e.subtitle}</p>}
             {e.authors?.length > 0 && (
               <>
                 <h2>Autores</h2>
@@ -495,11 +490,6 @@ function EditionDetail() {
                 <p>{e.reviewers.map((p) => p.name).join("; ")}</p>
               </>
             )}
-            <h2>Informações da publicação</h2>
-            <p>
-              Centro Universitário UNIEURO · Curso de Psicologia · Revista
-              científica digital.
-            </p>
           </article>
           {settings?.ratings_enabled && (
             <aside>
@@ -517,8 +507,22 @@ function EditionDetail() {
                   </button>
                 ))}
               </div>
-              {ratingError && <small role="alert">{ratingError}</small>}
-              {rating > 0 && <small>Avaliação registrada: {rating}/5</small>}
+              {ratingError && (
+                <small
+                  className="action-feedback action-feedback--error"
+                  role="alert"
+                >
+                  {ratingError}
+                </small>
+              )}
+              {ratingMessage && (
+                <small
+                  className="action-feedback action-feedback--success"
+                  role="status"
+                >
+                  {ratingMessage} ({rating}/5)
+                </small>
+              )}
             </aside>
           )}
         </section>
@@ -830,7 +834,11 @@ function AdminLogin() {
             </small>
           </span>
         </label>
-        {error && <p role="alert">{error}</p>}
+        {error && (
+          <p className="action-feedback action-feedback--error" role="alert">
+            {error}
+          </p>
+        )}
         <button className="button primary full" disabled={busy}>
           {busy ? "Entrando…" : "Entrar"}
         </button>

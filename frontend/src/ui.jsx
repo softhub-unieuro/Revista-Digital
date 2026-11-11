@@ -171,11 +171,12 @@ function Brand({ compact = false, variant = "header" }) {
     <Link
       to="/"
       className={`brand ${compact ? "brand--compact" : ""} brand--${variant}`}
+      aria-label="Revista Científica de Psicologia — Centro Universitário UNIEURO"
     >
       <img
+        className="brand-lockup"
         src={src}
         alt="UNIEURO · Revista Científica de Psicologia"
-        className="brand-lockup"
       />
     </Link>
   );

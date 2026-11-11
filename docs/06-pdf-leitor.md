@@ -50,6 +50,8 @@ na interface e converte destinos internos do PDF.js quando necessário.
 - Indicador informa exatamente as páginas visíveis.
 - Deslize navega em zoom ajustado; em zoom ampliado, arrasto move a página sem saltar edição.
 - Teclado e clique continuam disponíveis; salto direto valida o intervalo.
+- Em tela cheia, cabeçalho, miniaturas e ações externas são ocultados; permanecem
+  os controles do leitor, o indicador de páginas e o livro aberto.
 - Nova animação não pode atualizar o índice duas vezes em evento repetido.
 
 O comportamento a evitar é esconder a segunda página no celular e continuar somando dois.

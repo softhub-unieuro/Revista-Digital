@@ -55,7 +55,14 @@ function AdminShell({ title, subtitle, children, action }) {
             >
               Sair
             </button>
-            {logoutError && <span role="alert">{logoutError}</span>}
+            {logoutError && (
+              <span
+                className="action-feedback action-feedback--error"
+                role="alert"
+              >
+                {logoutError}
+              </span>
+            )}
           </div>
         </div>
       </header>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { AdminLayout } from "./admin-layout";
 import { request } from "./api";
 import { useAuth } from "./auth";
@@ -100,7 +100,7 @@ export function PublicationForm({ value, onChange, categories }) {
         </div>
       </fieldset>
       {peopleError && (
-        <p role="alert">
+        <p className="action-feedback action-feedback--error" role="alert">
           {peopleError}
           <button
             type="button"
@@ -237,7 +237,7 @@ function Upload({ doc, onChange }) {
       </label>
       {doc && (
         <div
-          className="upload-status"
+          className={`upload-status${doc.state === "ready" ? " action-feedback action-feedback--success" : doc.state === "failed" ? " action-feedback action-feedback--error" : ""}`}
           role={doc.state === "failed" ? "alert" : "status"}
         >
           <strong>{doc.original_name}</strong>
@@ -264,7 +264,10 @@ function Upload({ doc, onChange }) {
         </div>
       )}
       {error && (
-        <div className="upload-status" role="alert">
+        <div
+          className="upload-status action-feedback action-feedback--error"
+          role="alert"
+        >
           {error}
           {doc && (
             <button
@@ -285,11 +288,13 @@ function Upload({ doc, onChange }) {
 }
 function CoverPicker({ doc, onChange }) {
   const [error, setError] = useState(""),
+    [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false);
   async function cover(file, reset = false) {
     if (!file && !reset) return;
     setBusy(true);
     setError("");
+    setMessage("");
     try {
       const body = new FormData();
       if (file) body.append("file", file);
@@ -297,6 +302,7 @@ function CoverPicker({ doc, onChange }) {
       onChange(
         await request(`/admin/jobs/${doc.id}/cover`, { method: "POST", body }),
       );
+      setMessage(reset ? "Capa restaurada a partir do PDF." : "Capa atualizada.");
     } catch (error) {
       setError(error.message);
     } finally {
@@ -337,7 +343,16 @@ function CoverPicker({ doc, onChange }) {
           </label>
         </div>
       </div>
-      {error && <p role="alert">{error}</p>}
+      {message && (
+        <p className="action-feedback action-feedback--success" role="status">
+          {message}
+        </p>
+      )}
+      {error && (
+        <p className="action-feedback action-feedback--error" role="alert">
+          {error}
+        </p>
+      )}
     </>
   );
 }
@@ -473,7 +488,10 @@ export function NewPublication() {
             </>
           )}
           {error && (
-            <p role="alert" className="form-error">
+            <p
+              role="alert"
+              className="form-error action-feedback action-feedback--error"
+            >
               {error}
             </p>
           )}
@@ -544,7 +562,11 @@ function RevisionHistory({ id }) {
       onToggle={(event) => setOpen(event.currentTarget.open)}
     >
       <summary>Histórico de arquivos</summary>
-      {error && <p role="alert">{error}</p>}
+      {error && (
+        <p className="action-feedback action-feedback--error" role="alert">
+          {error}
+        </p>
+      )}
       {open &&
         rows.map((revision) => (
           <div key={revision.id}>
@@ -565,13 +587,14 @@ function RevisionHistory({ id }) {
 
 export function EditPublication() {
   const { id } = useParams(),
+    location = useLocation(),
     { user } = useAuth(),
     { adminCategories, refresh } = useCatalog();
   const [row, setRow] = useState(null),
     [value, setValue] = useState(empty),
     [doc, setDoc] = useState(null),
     [error, setError] = useState(""),
-    [message, setMessage] = useState(""),
+    [message, setMessage] = useState(() => location.state?.message || ""),
     [busy, setBusy] = useState(false);
   const [loadVersion, setLoadVersion] = useState(0);
   const [conflict, setConflict] = useState(false);
@@ -627,7 +650,15 @@ export function EditPublication() {
       setRow(updated);
       refresh();
       setDoc(null);
-      setMessage("Alterações salvas.");
+      setMessage(
+        action === "publish"
+          ? "Edição publicada."
+          : action === "archive"
+            ? "Edição arquivada."
+            : action === "restore"
+              ? "Edição restaurada no acervo."
+              : "Alterações salvas.",
+      );
     } catch (error) {
       if (error.status === 412) setConflict(true);
       setError(error.message);
@@ -641,7 +672,10 @@ export function EditPublication() {
       subtitle={row ? `${row.issue} · ${row.title}` : "Carregando edição…"}
     >
       {error && (
-        <p role="alert" className="form-error">
+        <p
+          role="alert"
+          className="form-error action-feedback action-feedback--error"
+        >
           {error}
           {conflict && (
             <>
@@ -668,7 +702,11 @@ export function EditPublication() {
           )}
         </p>
       )}
-      {message && <p role="status">{message}</p>}
+      {message && (
+        <p className="action-feedback action-feedback--success" role="status">
+          {message}
+        </p>
+      )}
       {row && (
         <div className="edit-grid">
           <section className="admin-panel form-panel">

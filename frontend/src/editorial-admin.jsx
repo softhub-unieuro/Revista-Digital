@@ -65,7 +65,7 @@ function ListControls({ list, placeholder = "Buscar pelo nome..." }) {
       </label>
       {list.loading && <p role="status">Carregando…</p>}
       {list.error && (
-        <p role="alert">
+        <p className="action-feedback action-feedback--error" role="alert">
           {list.error}
           <button className="text-button" onClick={list.refresh}>
             Tentar novamente
@@ -165,8 +165,16 @@ export function PeopleAdmin({ kind }) {
         )
       }
     >
-      {message && <p role="status">{message}</p>}
-      {error && <p role="alert">{error}</p>}
+      {message && (
+        <p className="action-feedback action-feedback--success" role="status">
+          {message}
+        </p>
+      )}
+      {error && (
+        <p className="action-feedback action-feedback--error" role="alert">
+          {error}
+        </p>
+      )}
       {form && (
         <form
           className="admin-panel form-panel publication-form"
@@ -326,8 +334,16 @@ export function UsersAdmin() {
         </button>
       }
     >
-      {error && <p role="alert">{error}</p>}
-      {message && <p role="status">{message}</p>}
+      {error && (
+        <p className="action-feedback action-feedback--error" role="alert">
+          {error}
+        </p>
+      )}
+      {message && (
+        <p className="action-feedback action-feedback--success" role="status">
+          {message}
+        </p>
+      )}
       {form && (
         <form
           className="admin-panel form-panel publication-form"
@@ -478,7 +494,7 @@ export function SettingsAdmin() {
       subtitle="Preferências institucionais e editoriais da plataforma."
     >
       {error && (
-        <p role="alert">
+        <p className="action-feedback action-feedback--error" role="alert">
           {error}
           {!form && (
             <button
@@ -492,7 +508,11 @@ export function SettingsAdmin() {
           )}
         </p>
       )}
-      {message && <p role="status">{message}</p>}
+      {message && (
+        <p className="action-feedback action-feedback--success" role="status">
+          {message}
+        </p>
+      )}
       {!form && !error && <p role="status">Carregando configurações…</p>}
       {form && (
         <form onSubmit={save}>
@@ -584,7 +604,6 @@ export function SettingsAdmin() {
               </label>
               <div className="settings-brand">
                 <img src="/unieuro-logo.png" alt="Logo UNIEURO" />
-                <span>Logo oficial do Centro Universitário UNIEURO</span>
               </div>
             </section>
           </div>
@@ -655,7 +674,11 @@ export function AuditAdmin() {
       subtitle="Acompanhe as alterações administrativas registradas pelo sistema."
     >
       {list.loading && <p role="status">Carregando histórico…</p>}
-      {list.error && <p role="alert">{list.error}</p>}
+      {list.error && (
+        <p className="action-feedback action-feedback--error" role="alert">
+          {list.error}
+        </p>
+      )}
       <section className="admin-panel table-scroll">
         <table>
           <thead>
