@@ -15,8 +15,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
+from apps.accounts.permissions import is_admin
 from apps.core.audit import record
 from apps.core.models import SiteSettings
+from apps.documents.models import Document
 
 from .concurrency import VersionErrorSerializer, check_version, version_parameter
 from .models import Category, Publication, Rating
@@ -90,7 +92,7 @@ class PublicPublicationViewSet(ReadOnlyModelViewSet):
 class AdminPublicationViewSet(ModelViewSet):
     serializer_class = PublicationSerializer
     permission_classes = [IsAuthenticated]
-    http_method_names = ["get", "post", "patch", "head", "options"]
+    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
     def get_queryset(self):
         if getattr(self, "swagger_fake_view", False):
@@ -145,6 +147,42 @@ class AdminPublicationViewSet(ModelViewSet):
         if snapshot:
             result.update(snapshot)
         return Response(result)
+
+    @extend_schema(
+        request=None,
+        responses={
+            204: None,
+            412: VersionErrorSerializer,
+            428: VersionErrorSerializer,
+        },
+        parameters=[version_parameter],
+    )
+    @transaction.atomic
+    def destroy(self, request, *args, **kwargs):
+        if not is_admin(request.user):
+            raise PermissionDenied("Somente administradores podem excluir publicações.")
+        visible = self.get_object()
+        obj = get_object_or_404(Publication.objects.select_for_update(), pk=visible.pk)
+        check_version(request, obj)
+        document_ids = set(obj.revisions.values_list("document_id", flat=True))
+        if obj.document_id:
+            document_ids.add(obj.document_id)
+        record(request, "publication.delete", obj, ["permanent"])
+        obj.delete()
+        for document in Document.objects.select_for_update().filter(pk__in=document_ids):
+            if document.publication_set.exists() or document.publication_revisions.exists():
+                continue
+            storage = document.file.storage
+            filename, cover = document.file.name, document.cover
+            document.delete()
+
+            def remove_files(storage=storage, filename=filename, cover=cover):
+                storage.delete(filename)
+                if cover:
+                    storage.delete(cover)
+
+            transaction.on_commit(remove_files)
+        return Response(status=204)
 
     @extend_schema(responses=RevisionSerializer(many=True))
     @action(detail=True, methods=["get"])

@@ -51,6 +51,7 @@ Desabilitar download não bloqueia leitura nem oferece DRM.
 |---|---|
 | GET/POST /admin/publications | Colaborador no próprio escopo; editor/admin em todas |
 | GET/PATCH /admin/publications/{uuid} | Colaborador apenas próprios rascunhos; editor/admin |
+| DELETE /admin/publications/{uuid} | Exclusão permanente somente admin; exige `If-Match`; remove histórico e arquivos sem outros vínculos |
 | POST /admin/publications/{uuid}/publish, /archive, /restore | Editor/admin; restore retorna a rascunho |
 | GET /admin/publications/{uuid}/revisions | Histórico somente leitura no escopo autorizado |
 | POST /admin/uploads | Multipart PDF; 202 com job/documento; máximo 200 MiB |
@@ -78,10 +79,11 @@ proteção por senha e corrupção, gera capa e publica estado pronto/erro. Publ
 arquivo pronto. Repetir processamento não duplica publicação. Documentos sem vínculo
 podem ser limpos após 30 dias; execução é simulação até receber `--apply`.
 
-Atualizações editoriais bloqueiam a linha da publicação e capturam snapshots na mesma
-transação. PATCH e publish/archive/restore exigem `If-Match: "UUID:edit_version"`, com
+Atualizações e exclusões editoriais bloqueiam a linha da publicação. PATCH,
+publish/archive/restore e DELETE exigem `If-Match: "UUID:edit_version"`, com
 `edit_version` retornado na última leitura. Token ausente: 428; antigo/inválido: 412.
-A conferência ocorre sob bloqueio no banco e uma gravação aceita incrementa a versão.
+A conferência ocorre sob bloqueio no banco; atualizações aceitas incrementam a versão.
+As exclusões aceitas removem o registro.
 O frontend preserva o formulário em conflito e exige carregar a versão atual antes de
 salvar. O cliente não deve buscar automaticamente um token novo e reenviar um formulário
 antigo: primeiro deve revisar/conciliar as alterações. Contrato atualizado na

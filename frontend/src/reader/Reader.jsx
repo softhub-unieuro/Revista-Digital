@@ -139,11 +139,6 @@ function PdfPage({
           )}
         </>
       )}
-      {state === "loading" && (
-        <span className="pdf-state" role="status">
-          Carregando página {number}…
-        </span>
-      )}
       {state === "error" && (
         <span className="pdf-state" role="alert">
           {thumbnail ? (

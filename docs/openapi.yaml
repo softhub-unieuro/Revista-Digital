@@ -486,6 +486,42 @@ paths:
               schema:
                 $ref: '#/components/schemas/VersionError'
           description: ''
+    delete:
+      operationId: api_v1_admin_publications_destroy
+      parameters:
+      - in: header
+        name: If-Match
+        schema:
+          type: string
+        description: 'Token da edição lida: "UUID:edit_version". Ausente: 428; antigo/inválido:
+          412.'
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: Um string UUID que identifica este publication.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+        '412':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionError'
+          description: ''
+        '428':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionError'
+          description: ''
   /api/v1/admin/publications/{id}/archive:
     post:
       operationId: api_v1_admin_publications_archive_create

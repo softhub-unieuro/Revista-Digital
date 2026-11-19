@@ -20,6 +20,8 @@ ativo não pode ser desativado nem perder seu papel. Senha em branco numa ediç�
 a atual; uma senha nova deve atender às regras exibidas pelo servidor. Autores e
 pareceristas são pessoas do conteúdo editorial e não recebem login automaticamente.
 Recuperação do primeiro acesso é feita pelo responsável técnico conforme o guia Docker.
+Para alterar a própria senha, abra **Usuários**, edite sua conta e informe a nova senha.
+Guarde-a no gerenciador de senhas; o sistema armazena somente o hash.
 
 ## Preparar a revista
 
@@ -56,6 +58,10 @@ os dados associados; ele não fornece restauração automática de metadados.
 **Arquivar** retira a edição do público, inclusive leitura/download por URL conhecida.
 O conteúdo e histórico continuam guardados. **Restaurar** devolve a edição ao rascunho; publique novamente quando estiver revisada.
 Não use arquivamento como exclusão de dados pessoais ou limpeza de disco.
+O administrador também pode **excluir permanentemente** uma edição na lista de
+publicações. A confirmação remove os dados e o histórico; PDFs e capas são apagados
+quando não há outra edição ou histórico que ainda os utilize. A exclusão não pode ser
+desfeita.
 
 ## Portal e leitor
 

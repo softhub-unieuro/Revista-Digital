@@ -126,6 +126,11 @@ const iconPaths = {
       <path d="m14.5 6.5 3 3" />
     </>
   ),
+  trash: (
+    <>
+      <path d="M4 7h16M10 11v6M14 11v6M5 7l1 14h12l1-14M9 7V4h6v3" />
+    </>
+  ),
   upload: (
     <>
       <path d="M12 17V5" />

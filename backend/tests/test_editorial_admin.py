@@ -4,10 +4,17 @@ import uuid
 from concurrent.futures import ThreadPoolExecutor
 from datetime import timedelta
 from io import BytesIO
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-from apps.catalog.models import Category, Publication, PublicationCategory
+from apps.catalog.models import (
+    Category,
+    Publication,
+    PublicationCategory,
+    PublicationRevision,
+    Rating,
+)
 from apps.core.models import AuditEvent
 from apps.documents.models import Document
 from django.contrib.auth import get_user_model
@@ -71,6 +78,89 @@ def test_sensitive_endpoints_are_admin_only(setup, role):
         "/api/v1/admin/users",
         {"email": "escalation@test.local", "password": PASSWORD, "name": "X", "role": "admin"},
     ).status_code == (403 if role else 401)
+
+
+def test_permanent_publication_delete_checks_role_and_version(setup):
+    client, admin, editor, _ = setup
+    pub = ready_publication(admin)
+    url = f"/api/v1/admin/publications/{pub.pk}"
+    token = f'"{pub.pk}:{pub.edit_version}"'
+
+    assert client.delete(url).status_code == 428
+    assert client.delete(url, HTTP_IF_MATCH='"stale"').status_code == 412
+    client.force_authenticate(editor)
+    assert client.delete(url, HTTP_IF_MATCH=token).status_code == 403
+    assert Publication.objects.filter(pk=pub.pk).exists()
+    assert not AuditEvent.objects.filter(action="publication.delete").exists()
+
+
+def test_permanent_publication_delete_removes_unshared_history_and_files(setup, settings):
+    client, admin, *_ = setup
+    pub = ready_publication(admin)
+    current_doc = pub.document
+    current_file = current_doc.file.path
+    cover = "covers/test-cover.jpg"
+    cover_file = settings.MEDIA_ROOT / cover
+    cover_file.parent.mkdir(parents=True, exist_ok=True)
+    cover_file.write_bytes(b"cover")
+    current_doc.cover = cover
+    current_doc.save(update_fields=["cover"])
+
+    historical_doc = Document.objects.create(
+        owner=admin,
+        file=ContentFile(b"%PDF-1.4 historical", name="historical.pdf"),
+        original_name="historical.pdf",
+        state="ready",
+    )
+    historical_file = historical_doc.file.path
+    PublicationRevision.objects.create(
+        publication=pub,
+        document=historical_doc,
+        actor=admin,
+        status="published",
+        snapshot={"title": pub.title},
+    )
+    Rating.objects.create(publication=pub, visitor="visitor", score=5)
+
+    response = client.delete(
+        f"/api/v1/admin/publications/{pub.pk}",
+        HTTP_IF_MATCH=f'"{pub.pk}:{pub.edit_version}"',
+    )
+
+    assert response.status_code == 204
+    assert not Publication.objects.filter(pk=pub.pk).exists()
+    assert not Document.objects.filter(pk__in=[current_doc.pk, historical_doc.pk]).exists()
+    assert not Path(current_file).exists()
+    assert not Path(historical_file).exists()
+    assert not cover_file.exists()
+    event = AuditEvent.objects.get(action="publication.delete")
+    assert event.target == f"catalog.publication:{pub.pk}"
+    assert event.target_label == pub.title
+
+
+def test_permanent_publication_delete_preserves_a_shared_document(setup):
+    client, admin, *_ = setup
+    pub = ready_publication(admin)
+    other = Publication.objects.create(
+        owner=admin,
+        title="Outra edição",
+        issue="N. 2",
+        publication_date="2026-11-04",
+        document=pub.document,
+    )
+    document = pub.document
+    filename = document.file.name
+
+    response = client.delete(
+        f"/api/v1/admin/publications/{pub.pk}",
+        HTTP_IF_MATCH=f'"{pub.pk}:{pub.edit_version}"',
+    )
+
+    assert response.status_code == 204
+    assert not Publication.objects.filter(pk=pub.pk).exists()
+    assert Publication.objects.filter(pk=other.pk).exists()
+    assert Document.objects.filter(pk=document.pk).exists()
+    assert document.file.storage.exists(filename)
 
 
 def test_user_crud_password_and_casefold_email(setup):
