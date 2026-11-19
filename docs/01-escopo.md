@@ -23,7 +23,7 @@ de 30–50 páginas do PDF orientativo.
 | Institucional | Sobre, normas, política editorial e contato com destino/conteúdo real |
 | Leitor | PDF real de até 300 páginas, clique, teclado, toque, zoom, salto de página e animação |
 | Login | Sessão real, logout, expiração e retorno à navegação correta |
-| Publicações | Listar, filtrar, criar, editar, rascunhar, publicar, arquivar e restaurar |
+| Publicações | Listar, filtrar, criar, editar, rascunhar, publicar, arquivar, restaurar; administrador pode excluir permanentemente com confirmação |
 | Arquivos e capas | Upload validado, capa automática ou enviada e acompanhamento do processamento |
 | Categorias | Criar/editar; impedir remoção em uso e permitir desativação controlada |
 | Avaliações | Nota de 1 a 5, persistência, médias e indicadores reais |
@@ -55,6 +55,7 @@ frontend atual usa a primeira edição como substituta em alguns casos; corrigir
 | Editar rascunho | Não | Próprio | Todos | Todos |
 | Ver arquivos não públicos | Não | Próprios | Todos | Todos |
 | Publicar, despublicar, arquivar/restaurar | Não | Não | Sim | Sim |
+| Excluir publicação permanentemente | Não | Não | Não | Sim |
 | Gerenciar categorias | Não | Consulta | Sim | Sim |
 | Consultar indicadores administrativos | Não | Próprios | Todos | Todos |
 | Gerenciar usuários e configurações | Não | Não | Não | Sim |

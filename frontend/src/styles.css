@@ -152,6 +152,7 @@ td>.cover{width:42px;height:52px;object-fit:cover;box-shadow:none;border:1px sol
 td>b{font:700 12px/1.2 Georgia,"Times New Roman",serif;color:#153d66}td>small{font-size:9.5px;color:#6b8297;margin-top:3px}
 .category-pill{font-size:9px;border-radius:5px;background:#eaf4fc;color:#2b6ca5;padding:6px 8px}.status-pill{font-size:9px;border-radius:5px;background:#dff7e8;color:#1a8b4a;padding:6px 10px}
 .table-actions a,.table-actions button{width:29px;height:29px;border-radius:5px;border-color:#d5e0e8;color:#0756a3}
+.table-actions button[aria-label^="Excluir permanentemente"]{color:#a62323;border-color:#e4c2c2}
 .admin-filters{grid-template-columns:1fr 160px 180px 155px}
 
 /* Keep wizard, settings and lists in the same institutional shell. */

@@ -53,6 +53,8 @@ na interface e converte destinos internos do PDF.js quando necessário.
 - Em tela cheia, cabeçalho, miniaturas e ações externas são ocultados; permanecem
   os controles do leitor, o indicador de páginas e o livro aberto.
 - Nova animação não pode atualizar o índice duas vezes em evento repetido.
+- Durante a renderização de uma página virada, a folha permanece em branco sem texto
+  provisório de carregamento; falhas continuam exibindo uma mensagem de recuperação.
 
 O comportamento a evitar é esconder a segunda página no celular e continuar somando dois.
 O teste deve percorrer todas as páginas e provar que nenhuma página par fica inacessível.

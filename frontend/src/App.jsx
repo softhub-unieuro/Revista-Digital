@@ -911,10 +911,16 @@ function PublicationTable({ rows, showFilters = true }) {
   const [page, setPage] = useState(1);
   const { adminRows, categories, adminReady, adminError, refresh } =
     useCatalog();
+  const { user } = useAuth();
   const [q, setQ] = useState(""),
     [year, setYear] = useState(""),
     [category, setCategory] = useState(""),
     [status, setStatus] = useState("");
+  const [deleteState, setDeleteState] = useState({
+    id: null,
+    error: "",
+    message: "",
+  });
   const data = rows || adminRows;
   const filtered = data.filter(
     (e) =>
@@ -923,6 +929,33 @@ function PublicationTable({ rows, showFilters = true }) {
       (!category || e.categories.includes(category)) &&
       (!status || e.status === status),
   );
+  async function removePublication(edition) {
+    const confirmed = window.confirm(
+      `Excluir permanentemente "${edition.title}" (${edition.issue})? Esta ação remove a edição e seu histórico. Os PDFs só serão removidos se nenhuma outra edição nem histórico ainda os utilizar.`,
+    );
+    if (!confirmed) return;
+    setDeleteState({ id: edition.id, error: "", message: "" });
+    try {
+      await request(`/admin/publications/${edition.id}`, {
+        method: "DELETE",
+        headers: {
+          "If-Match": `"${edition.id}:${edition.edit_version}"`,
+        },
+      });
+      setPage((current) =>
+        Math.min(current, Math.max(1, Math.ceil((filtered.length - 1) / 10))),
+      );
+      setDeleteState({
+        id: null,
+        error: "",
+        message: "Edição removida permanentemente.",
+      });
+      refresh();
+    } catch (error) {
+      setDeleteState({ id: null, error: error.message, message: "" });
+      refresh();
+    }
+  }
   return (
     <section className="admin-panel publications-panel">
       <div className="panel-heading">
@@ -937,6 +970,16 @@ function PublicationTable({ rows, showFilters = true }) {
           />
         </div>
       </div>
+      {deleteState.error && (
+        <p className="action-feedback action-feedback--error" role="alert">
+          {deleteState.error}
+        </p>
+      )}
+      {deleteState.message && (
+        <p className="action-feedback action-feedback--success" role="status">
+          {deleteState.message}
+        </p>
+      )}
       {adminError && (
         <p role="alert">
           {adminError}
@@ -1028,6 +1071,17 @@ function PublicationTable({ rows, showFilters = true }) {
                     >
                       <Icon name="edit" size={16} />
                     </Link>
+                    {user?.is_admin && showFilters && (
+                      <button
+                        type="button"
+                        aria-label={`Excluir permanentemente ${e.title}`}
+                        title="Excluir permanentemente"
+                        disabled={deleteState.id !== null}
+                        onClick={() => removePublication(e)}
+                      >
+                        <Icon name="trash" size={16} />
+                      </button>
+                    )}
                   </div>
                 </td>
               </tr>
